@@ -1,62 +1,27 @@
-// ---------------------------------------------------------------------------
-// SBT Build File for SBT EditSource Plugin
-//
-// Copyright (c) 2010-2015 Brian M. Clapper
-//
-// See accompanying license file for license information.
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// Basic settings
-
-name := "sbt-editsource"
-
-version := "0.8.0"
+import sbt._
 
 sbtPlugin := true
 
-organization := "org.clapper"
 
-licenses += ("BSD New", url("https://github.com/bmc/sbt-editsource/blob/master/LICENSE.md"))
+// Basic application information.
+// ---------------------------------------
+organization := "com.github.gpgekko"
+organizationName := "gpgekko"
+organizationHomepage := Some(new URL("https://github.com/gpgekko"))
+name := "sbt-editsource"
+homepage := Some(new URL("https://github.com/gpgekko/sbt-autoprefixer"))
+startYear := Some(2017)
 
-description := "SBT plugin to edit files on the fly"
+licenses += ("BSD New", url("https://github.com/gpgekko/sbt-editsource/blob/master/LICENSE.md"))
+
+
+// Scala version to use.
+// ---------------------------------------
+crossSbtVersions := Seq("0.13.16", "1.0.2")
+
 
 // ---------------------------------------------------------------------------
-// Additional compiler options and plugins
-
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
-
-crossScalaVersions := Seq("2.10.6")
-
-// ---------------------------------------------------------------------------
-// Other dependendencies
+// Other dependencies
 
 // External deps
-libraryDependencies += "org.clapper" %% "grizzled-scala" % "4.2.0"
-
-// ---------------------------------------------------------------------------
-// Publishing criteria
-
-publishMavenStyle := false
-
-// ---------------------------------------------------------------------------
-// Publishing criteria
-
-// Don't set publishTo. The Bintray plugin does that automatically.
-
-publishMavenStyle := true
-publishArtifact in Test := false
-pomIncludeRepository := { _ => false }
-pomExtra :=
-  <scm>
-    <url>git@github.com:bmc/grizzled-scala.git/</url>
-    <connection>scm:git:git@github.com:bmc/sbt-editsource.git</connection>
-  </scm>
-    <developers>
-      <developer>
-        <id>bmc</id>
-        <name>Brian Clapper</name>
-        <url>http://www.clapper.org/bmc</url>
-      </developer>
-    </developers>
-
+libraryDependencies += "org.clapper" %% "grizzled-scala" % "4.4.1"

@@ -35,49 +35,47 @@
   ---------------------------------------------------------------------------
 */
 
-package org.clapper.sbt.editsource
-
-import scala.util.matching.Regex
-import scala.Enumeration
-import scala.annotation.tailrec
+package com.github.gpgekko.sbt.editsource
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
 import grizzled.string.template.UnixShellStringTemplate
 
+import scala.util.Try
+
 private[editsource] class EditSourceStringTemplate(vars: Map[String, String]) {
-  private val delegate = new UnixShellStringTemplate(dereference _,
-                                                     """[a-zA-Z0-0_.]+""",
-                                                     true)
-  private val TimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-  private val DateFormat = new SimpleDateFormat("yyyy/MM/dd")
+   private val delegate = new UnixShellStringTemplate(dereference,
+                                                      """[a-zA-Z0-0_.]+""",
+                                                      true)
+   private val TimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+   private val DateFormat = new SimpleDateFormat("yyyy/MM/dd")
 
-  @inline final def substitute(line: String) = delegate.sub(line)
+   @inline final def substitute(line: String): Try[String] = delegate.sub(line)
 
-  def dereference(varName: String): Option[String] = {
-    if (varName.trim == "")
-      None
-    else if (varName.startsWith("env."))
-      env(varName.drop(4))
-    else if (varName.startsWith("sys."))
-      sys(varName.drop(4))
-    else
-      vars.get(varName)
-  }
+   def dereference(varName: String): Option[String] = {
+      if (varName.trim == "")
+         None
+      else if (varName.startsWith("env."))
+         env(varName.drop(4))
+      else if (varName.startsWith("sys."))
+         sys(varName.drop(4))
+      else
+         vars.get(varName)
+   }
 
-  private def env(s: String): Option[String] = {
-    val result = System.getenv(s)
-    if (result == null) None else Some(result)
-  }
+   private def env(s: String): Option[String] = {
+      val result = System.getenv(s)
+      Option(result)
+   }
 
-  private def sys(s: String): Option[String] = {
-    val result = s match {
-      case "now"   => TimeFormat.format(new Date)
-      case "today" => DateFormat.format(new Date)
-      case _       => System.getProperty(s)
-    }
+   private def sys(s: String): Option[String] = {
+      val result = s match {
+         case "now"   => TimeFormat.format(new Date)
+         case "today" => DateFormat.format(new Date)
+         case _       => System.getProperty(s)
+      }
 
-    if (result == null) None else Some(result)
-  }
+      Option(result)
+   }
 }
